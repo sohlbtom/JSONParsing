@@ -20,7 +20,7 @@ public class HttpHandler {
 
     }
 
-    public String makeServiceCall(String reqUrl) {
+    String makeServiceCall(String reqUrl) {
 
         String stream = null;
         try {
