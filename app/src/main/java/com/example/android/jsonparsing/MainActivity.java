@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     StationAdapter adapter;
     ArrayList<Station> stationArrayList;
     DBHandler handler;
+    private static String url = "http://rata.digitraffic.fi/api/v1/metadata/stations";
 
 
     @Override
@@ -70,40 +71,15 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
-            //String serverData = null;// String object to store fetched data from server
-            String stream = null;
             // Http Request Code start
-            //DefaultHttpClient httpClient = new DefaultHttpClient();
-            //HttpGet httpGet = new HttpGet("http://rata.digitraffic.fi/api/v1/metadata/stations");
-            try {
-                URL url = new URL("http://rata.digitraffic.fi/api/v1/metadata/stations");
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-
-                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-                BufferedReader r = new BufferedReader(new InputStreamReader(in));
-                StringBuilder sb = new StringBuilder();
-                String line;
-                while ((line = r.readLine()) != null) {
-                    sb.append(line);
-                }
-                stream = sb.toString();
-                // End reading...............
-                Log.d("response", stream);
-                // Disconnect the HttpURLConnection
-                urlConnection.disconnect();
-                //HttpResponse httpResponse = httpClient.execute(httpGet);
-                //HttpEntity httpEntity = httpResponse.getEntity();
-                //serverData = EntityUtils.toString(httpEntity);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-// Http Request Code end
-// Json Parsing Code Start
+            HttpHandler sh = new HttpHandler();
+            String jsonStr = sh.makeServiceCall(url);
+            Log.d("Response from url: ", jsonStr);
+            // Http Request Code end
+            // Json Parsing Code Start
             try {
                 stationArrayList = new ArrayList<>();
-                //JSONObject jsonObject = new JSONObject(serverData);
-                JSONArray jsonArray = new JSONArray(stream);
+                JSONArray jsonArray = new JSONArray(jsonStr);
                 for (int i = 0; i <jsonArray.length(); i++)
                 {
                     JSONObject jsonObjectStation = jsonArray.getJSONObject(i);
