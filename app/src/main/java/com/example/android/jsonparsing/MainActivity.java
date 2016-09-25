@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     StationAdapter adapter;
     ArrayList<Station> stationArrayList;
     DBHandler handler;
-    private static String url = "http://rata.digitraffic.fi/api/v1/metadata/stations";
+    protected static String url = "http://rata.digitraffic.fi/api/v1/metadata/stations";
 
 
     @Override
