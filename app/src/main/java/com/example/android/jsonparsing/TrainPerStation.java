@@ -1,70 +1,47 @@
 package com.example.android.jsonparsing;
 
 import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
-import android.app.Activity;
-import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MainActivity extends AppCompatActivity {
+public class TrainPerStation extends AppCompatActivity {
 
     private String TAG = MainActivity.class.getSimpleName();
     private ProgressDialog pDialog;
-    private ListView listView;
+    private ListView listView2;
     private Integer testi=0;
 
-    protected static String url = "http://rata.digitraffic.fi/api/v1/metadata/stations";
+    protected static String url = "http://rata.digitraffic.fi/api/v1/live-trains?station=KR&minutes_before_departure=150&minutes_after_departure=150&minutes_before_arrival=150&minutes_after_arrival=150";
 
-    ArrayList<HashMap<String, String>> stationList;
+    ArrayList<HashMap<String, String>> trainsPerStation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        stationList = new ArrayList<>();
-        listView = (ListView) findViewById(R.id.list);
+        setContentView(R.layout.activity_train_per_station);
+        trainsPerStation = new ArrayList<>();
+        listView2 = (ListView) findViewById(R.id.list2);
         new dataFetcher().execute();
     }
-        class dataFetcher extends AsyncTask<Void,Void,Void> {
+    class dataFetcher extends AsyncTask<Void,Void,Void> {
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             // Showing progress dialog
-            pDialog = new ProgressDialog(MainActivity.this);
+            pDialog = new ProgressDialog(TrainPerStation.this);
             pDialog.setMessage("Please wait...");
             pDialog.setCancelable(false);
             pDialog.show();
@@ -85,10 +62,13 @@ public class MainActivity extends AppCompatActivity {
                     HashMap<String, String> station = new HashMap<>();
                     JSONObject jsonObjectStation = jsonArray.getJSONObject(i);
 
-                    station.put("stationShortCode", jsonObjectStation.getString("stationShortCode"));
-                    station.put("stationName", jsonObjectStation.getString("stationName"));
-                    station.put("stationUICCode", jsonObjectStation.getString("stationUICCode"));
-                    stationList.add(station);
+                    String trainNumber = jsonObjectStation.getString("trainNumber");
+                    station.put("trainNumber", jsonObjectStation.getString("trainNumber"));
+
+                    //JSONObject timeTableRows = jsonObjectStation.getJSONObject("timeTableRows");
+                    //station.put("stationShortCode", timeTableRows.getString("stationShortCode"));
+                    //station.put("scheduledTime", timeTableRows.getString("scheduledTime"));
+                    trainsPerStation.add(station);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -105,12 +85,12 @@ public class MainActivity extends AppCompatActivity {
                 pDialog.dismiss();
 
             ListAdapter adapter = new SimpleAdapter(
-                    MainActivity.this, stationList,
-                    R.layout.list_item, new String[]{"stationName", "stationShortCode",
-                    "stationUICCode"}, new int[]{R.id.stationName,
-                    R.id.stationShortCode, R.id.stationUICCode});
+                    TrainPerStation.this, trainsPerStation,
+                    R.layout.list_train, new String[]{"trainNumber", "stationShortCode",
+                    "stationUICCode"}, new int[]{R.id.trainNumber,
+                    R.id.stationShortCode, R.id.scheduledTime});
 
-            listView.setAdapter(adapter);
+            listView2.setAdapter(adapter);
         }
     }
 }
