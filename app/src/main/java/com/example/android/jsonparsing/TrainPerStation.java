@@ -62,12 +62,17 @@ public class TrainPerStation extends AppCompatActivity {
                     HashMap<String, String> station = new HashMap<>();
                     JSONObject jsonObjectStation = jsonArray.getJSONObject(i);
 
-                    String trainNumber = jsonObjectStation.getString("trainNumber");
                     station.put("trainNumber", jsonObjectStation.getString("trainNumber"));
 
-                    //JSONObject timeTableRows = jsonObjectStation.getJSONObject("timeTableRows");
-                    //station.put("stationShortCode", timeTableRows.getString("stationShortCode"));
-                    //station.put("scheduledTime", timeTableRows.getString("scheduledTime"));
+                    JSONArray timeTableRows = jsonObjectStation.getJSONArray("timeTableRows");
+
+                    for(int j = 0; j < timeTableRows.length();j++){
+                        JSONObject jsonTimeTableRow = timeTableRows.getJSONObject(j);
+                        station.put("stationShortCode", jsonTimeTableRow.getString("stationShortCode"));
+                        station.put("scheduledTime", jsonTimeTableRow.getString("scheduledTime"));
+
+                    }
+
                     trainsPerStation.add(station);
                 }
             } catch (JSONException e) {
@@ -87,7 +92,7 @@ public class TrainPerStation extends AppCompatActivity {
             ListAdapter adapter = new SimpleAdapter(
                     TrainPerStation.this, trainsPerStation,
                     R.layout.list_train, new String[]{"trainNumber", "stationShortCode",
-                    "stationUICCode"}, new int[]{R.id.trainNumber,
+                    "scheduledTime"}, new int[]{R.id.trainNumber,
                     R.id.stationShortCode, R.id.scheduledTime});
 
             listView2.setAdapter(adapter);
