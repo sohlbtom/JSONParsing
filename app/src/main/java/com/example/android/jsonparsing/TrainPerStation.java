@@ -68,8 +68,13 @@ public class TrainPerStation extends AppCompatActivity {
 
                     for(int j = 0; j < timeTableRows.length();j++){
                         JSONObject jsonTimeTableRow = timeTableRows.getJSONObject(j);
-                        station.put("stationShortCode", jsonTimeTableRow.getString("stationShortCode"));
-                        station.put("scheduledTime", jsonTimeTableRow.getString("scheduledTime"));
+                        String stationShortCode = jsonTimeTableRow.getString("stationShortCode");
+                        if(stationShortCode.contains("KR")){
+                            station.put("stationShortCode", stationShortCode);
+                            station.put("scheduledTime", jsonTimeTableRow.getString("scheduledTime"));
+                        }
+                        //station.put("stationShortCode", jsonTimeTableRow.getString("stationShortCode"));
+                        //station.put("scheduledTime", jsonTimeTableRow.getString("scheduledTime"));
 
                     }
 
