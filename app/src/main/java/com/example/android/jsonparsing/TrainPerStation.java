@@ -16,6 +16,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class TrainPerStation extends AppCompatActivity {
 
@@ -29,7 +30,7 @@ public class TrainPerStation extends AppCompatActivity {
     String url;
 
 
-    ArrayList<HashMap<String, String>> trainsPerStation;
+    ArrayList<LinkedHashMap<String, String>> trainsPerStation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +71,7 @@ public class TrainPerStation extends AppCompatActivity {
                 JSONArray jsonArray = new JSONArray(jsonStr);
                 for (int i = 0; i <jsonArray.length(); i++)
                 {
-                    HashMap<String, String> station = new HashMap<>();
+                    HashMap<String, String> station = new LinkedHashMap<>();
                     JSONObject jsonObjectStation = jsonArray.getJSONObject(i);
 
                     station.put("trainNumber", jsonObjectStation.getString("trainNumber"));
@@ -92,7 +93,7 @@ public class TrainPerStation extends AppCompatActivity {
                         //station.put("scheduledTime", jsonTimeTableRow.getString("scheduledTime"));
 
                     }
-                        trainsPerStation.add(station);
+                        trainsPerStation.add((LinkedHashMap<String, String>) station);
 
 
                 }

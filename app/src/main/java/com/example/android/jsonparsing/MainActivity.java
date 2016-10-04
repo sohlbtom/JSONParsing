@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
     protected static String url = "http://rata.digitraffic.fi/api/v1/metadata/stations";
 
-    ArrayList<HashMap<String, String>> stationList;
+    ArrayList<LinkedHashMap<String, String>> stationList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 JSONArray jsonArray = new JSONArray(jsonStr);
                 for (int i = 0; i <jsonArray.length(); i++)
                 {
-                    HashMap<String, String> station = new HashMap<>();
+                    HashMap<String, String> station = new LinkedHashMap<>();
                     JSONObject jsonObjectStation = jsonArray.getJSONObject(i);
                     String passengerTraffic = jsonObjectStation.getString("passengerTraffic");
 
@@ -93,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                         station.put("stationShortCode", jsonObjectStation.getString("stationShortCode"));
                         station.put("stationName", jsonObjectStation.getString("stationName"));
                         station.put("stationUICCode", jsonObjectStation.getString("stationUICCode"));
-                        stationList.add(station);
+                        stationList.add((LinkedHashMap<String, String>) station);
                     }
                 }
             } catch (JSONException e) {
@@ -123,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
                     Intent intent = new Intent(MainActivity.this, TrainPerStation.class);
-                    intent.putExtra("stationShortCode",stationList.indexOf(i));
+                    intent.putExtra("stationShortCode", stationList.get(i));
                     startActivity(intent);
                 }
             });
