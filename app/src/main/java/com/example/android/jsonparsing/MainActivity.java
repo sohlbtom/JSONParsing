@@ -1,6 +1,7 @@
 package com.example.android.jsonparsing;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -84,11 +86,15 @@ public class MainActivity extends AppCompatActivity {
                 {
                     HashMap<String, String> station = new HashMap<>();
                     JSONObject jsonObjectStation = jsonArray.getJSONObject(i);
+                    String passengerTraffic = jsonObjectStation.getString("passengerTraffic");
 
-                    station.put("stationShortCode", jsonObjectStation.getString("stationShortCode"));
-                    station.put("stationName", jsonObjectStation.getString("stationName"));
-                    station.put("stationUICCode", jsonObjectStation.getString("stationUICCode"));
-                    stationList.add(station);
+                    //Laitettu ehto, jotta tulostaa listalle vain kaupallisen matkustajaliikenteen asemat.
+                    if(passengerTraffic == "true") {
+                        station.put("stationShortCode", jsonObjectStation.getString("stationShortCode"));
+                        station.put("stationName", jsonObjectStation.getString("stationName"));
+                        station.put("stationUICCode", jsonObjectStation.getString("stationUICCode"));
+                        stationList.add(station);
+                    }
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -104,13 +110,22 @@ public class MainActivity extends AppCompatActivity {
             if (pDialog.isShowing())
                 pDialog.dismiss();
 
-            ListAdapter adapter = new SimpleAdapter(
+            final ListAdapter adapter = new SimpleAdapter(
                     MainActivity.this, stationList,
                     R.layout.list_item, new String[]{"stationName", "stationShortCode",
                     "stationUICCode"}, new int[]{R.id.stationName,
                     R.id.stationShortCode, R.id.stationUICCode});
 
             listView.setAdapter(adapter);
+            listView.setClickable(true);
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Intent intent = new Intent(MainActivity.this, TrainPerStation.class);
+                    intent.putExtra("stationShortCode","stationShortCode");
+                    startActivity(intent);
+                }
+            });
         }
     }
 }
