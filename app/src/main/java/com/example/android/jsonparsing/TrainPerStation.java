@@ -1,6 +1,7 @@
 package com.example.android.jsonparsing;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,8 +23,11 @@ public class TrainPerStation extends AppCompatActivity {
     private ProgressDialog pDialog;
     private ListView listView2;
     private Integer testi=0;
+    //String stationShortCode = intent.getStringExtra("stationShortCode");
+    //String shortCode = "RI";
+    String shortCode;
+    String url;
 
-    protected static String url = "http://rata.digitraffic.fi/api/v1/live-trains?station=KR&minutes_before_departure=150&minutes_after_departure=150&minutes_before_arrival=150&minutes_after_arrival=150";
 
     ArrayList<HashMap<String, String>> trainsPerStation;
 
@@ -34,7 +38,13 @@ public class TrainPerStation extends AppCompatActivity {
         trainsPerStation = new ArrayList<>();
         listView2 = (ListView) findViewById(R.id.list2);
         new dataFetcher().execute();
+        Intent intent = getIntent();
+        shortCode = intent.getStringExtra("stationShortCode");
+        url = "http://rata.digitraffic.fi/api/v1/live-trains?station=" + shortCode + "&minutes_before_departure=0&minutes_after_departure=0&minutes_before_arrival=150&minutes_after_arrival=150";
     }
+
+
+
     class dataFetcher extends AsyncTask<Void,Void,Void> {
 
         @Override
@@ -50,6 +60,7 @@ public class TrainPerStation extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... params) {
             // Http Request Code start
+
             HttpHandler sh = new HttpHandler();
             String jsonStr = sh.makeServiceCall(url);
             Log.d("Response from url: ", jsonStr);
@@ -69,16 +80,21 @@ public class TrainPerStation extends AppCompatActivity {
                     for(int j = 0; j < timeTableRows.length();j++){
                         JSONObject jsonTimeTableRow = timeTableRows.getJSONObject(j);
                         String stationShortCode = jsonTimeTableRow.getString("stationShortCode");
-                        if(stationShortCode.contains("KR")){
+                        String type = jsonTimeTableRow.getString("type");
+                        int differenceInMinutes = Integer.parseInt(jsonTimeTableRow.getString("differenceInMinutes"));
+                        if(stationShortCode.equals(shortCode) && type.equals("ARRIVAL")){
                             station.put("stationShortCode", stationShortCode);
                             station.put("scheduledTime", jsonTimeTableRow.getString("scheduledTime"));
+                            station.put("differenceInMinutes", jsonTimeTableRow.getString("differenceInMinutes"));
                         }
+
                         //station.put("stationShortCode", jsonTimeTableRow.getString("stationShortCode"));
                         //station.put("scheduledTime", jsonTimeTableRow.getString("scheduledTime"));
 
                     }
+                        trainsPerStation.add(station);
 
-                    trainsPerStation.add(station);
+
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

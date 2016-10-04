@@ -116,13 +116,14 @@ public class MainActivity extends AppCompatActivity {
                     "stationUICCode"}, new int[]{R.id.stationName,
                     R.id.stationShortCode, R.id.stationUICCode});
 
+
             listView.setAdapter(adapter);
             listView.setClickable(true);
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
                     Intent intent = new Intent(MainActivity.this, TrainPerStation.class);
-                    intent.putExtra("stationShortCode","stationShortCode");
+                    intent.putExtra("stationShortCode",stationList.indexOf(i));
                     startActivity(intent);
                 }
             });
