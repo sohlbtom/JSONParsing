@@ -4,40 +4,16 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
-import android.app.Activity;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -85,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                 JSONArray jsonArray = new JSONArray(jsonStr);
                 for (int i = 0; i <jsonArray.length(); i++)
                 {
-                    HashMap<String, String> station = new LinkedHashMap<>();
+                    LinkedHashMap<String, String> station = new LinkedHashMap<>();
                     JSONObject jsonObjectStation = jsonArray.getJSONObject(i);
                     String passengerTraffic = jsonObjectStation.getString("passengerTraffic");
 
@@ -124,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
                     Intent intent = new Intent(MainActivity.this, TrainPerStation.class);
-                    intent.putExtra("stationShortCode", stationList.get(i));
+                    intent.putExtra("stationShortCode", stationList.get(i).toString());
                     startActivity(intent);
                 }
             });

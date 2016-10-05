@@ -71,7 +71,7 @@ public class TrainPerStation extends AppCompatActivity {
                 JSONArray jsonArray = new JSONArray(jsonStr);
                 for (int i = 0; i <jsonArray.length(); i++)
                 {
-                    HashMap<String, String> station = new LinkedHashMap<>();
+                    LinkedHashMap<String, String> station = new LinkedHashMap<>();
                     JSONObject jsonObjectStation = jsonArray.getJSONObject(i);
 
                     station.put("trainNumber", jsonObjectStation.getString("trainNumber"));
