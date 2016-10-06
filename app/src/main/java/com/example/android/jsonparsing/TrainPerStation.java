@@ -89,8 +89,6 @@ public class TrainPerStation extends AppCompatActivity {
                             station.put("differenceInMinutes", jsonTimeTableRow.getString("differenceInMinutes"));
                         }
 
-                        //station.put("stationShortCode", jsonTimeTableRow.getString("stationShortCode"));
-                        //station.put("scheduledTime", jsonTimeTableRow.getString("scheduledTime"));
 
                     }
                         trainsPerStation.add((LinkedHashMap<String, String>) station);

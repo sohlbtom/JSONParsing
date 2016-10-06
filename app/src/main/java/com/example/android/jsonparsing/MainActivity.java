@@ -59,22 +59,18 @@ public class MainActivity extends AppCompatActivity {
             // Json Parsing Code Start
             try {
                 JSONArray jsonArray = new JSONArray(jsonStr);
-                ArrayList<Station> filteredStations = new ArrayList<>();
                 for (int i = 0; i <jsonArray.length(); i++)
                 {
 
-
-                    //LinkedHashMap<String, String> station = new LinkedHashMap<>();
                     JSONObject jsonObjectStation = jsonArray.getJSONObject(i);
                     String passengerTraffic = jsonObjectStation.getString("passengerTraffic");
 
                     //Laitettu ehto, jotta tulostaa listalle vain kaupallisen matkustajaliikenteen asemat.
                     if(passengerTraffic == "true") {
-                        stationList.add(new Station("Helsinki","HKI", "1"));
-                        //station.put("stationShortCode", jsonObjectStation.getString("stationShortCode"));
-                        //station.put("stationName", jsonObjectStation.getString("stationName"));
-                        //station.put("stationUICCode", jsonObjectStation.getString("stationUICCode"));
-                        //stationList.add((LinkedHashMap<String, String>) station);
+                        String stationShortCode = jsonObjectStation.getString("stationShortCode");
+                        String stationName = jsonObjectStation.getString("stationName");
+                        String stationUICCode = jsonObjectStation.getString("stationUICCode");
+                        stationList.add(new Station(stationName, stationShortCode, stationUICCode));
                     }
                 }
             } catch (JSONException e) {
@@ -91,11 +87,8 @@ public class MainActivity extends AppCompatActivity {
             if (pDialog.isShowing())
                 pDialog.dismiss();
 
-            final ListAdapter adapter = new ArrayAdapter<Station>(
-                    MainActivity.this, stationList,
-                    R.layout.list_item, new String[]{"stationName", "stationShortCode",
-                    "stationUICCode"}, new int[]{R.id.stationName,
-                    R.id.stationShortCode, R.id.stationUICCode});
+
+        ArrayAdapter adapter = new ArrayAdapter<Station>(MainActivity.this, R.layout.list_item, R.id.stationName, stationList);
 
 
             listView.setAdapter(adapter);
@@ -104,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
                     Intent intent = new Intent(MainActivity.this, TrainPerStation.class);
-                    intent.putExtra("stationShortCode", stationList.get(i).toString());
+                    intent.putExtra("stationShortCode", stationList.get(i).getStationShortCode().toString());
                     startActivity(intent);
                 }
             });

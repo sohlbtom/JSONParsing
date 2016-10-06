@@ -58,4 +58,9 @@ public class Station {
     public void setStationUICCode(String stationUICCode) {
         this.stationUICCode = stationUICCode;
     }
+
+    @Override
+    public String toString(){
+        return this.stationName;
+    }
 }
