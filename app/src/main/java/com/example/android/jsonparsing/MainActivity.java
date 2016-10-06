@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -27,13 +28,12 @@ public class MainActivity extends AppCompatActivity {
 
     protected static String url = "http://rata.digitraffic.fi/api/v1/metadata/stations";
 
-    ArrayList<LinkedHashMap<String, String>> stationList;
+    ArrayList<Station> stationList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        stationList = new ArrayList<>();
         listView = (ListView) findViewById(R.id.list);
         new dataFetcher().execute();
     }
@@ -59,18 +59,22 @@ public class MainActivity extends AppCompatActivity {
             // Json Parsing Code Start
             try {
                 JSONArray jsonArray = new JSONArray(jsonStr);
+                ArrayList<Station> filteredStations = new ArrayList<>();
                 for (int i = 0; i <jsonArray.length(); i++)
                 {
-                    LinkedHashMap<String, String> station = new LinkedHashMap<>();
+
+
+                    //LinkedHashMap<String, String> station = new LinkedHashMap<>();
                     JSONObject jsonObjectStation = jsonArray.getJSONObject(i);
                     String passengerTraffic = jsonObjectStation.getString("passengerTraffic");
 
                     //Laitettu ehto, jotta tulostaa listalle vain kaupallisen matkustajaliikenteen asemat.
                     if(passengerTraffic == "true") {
-                        station.put("stationShortCode", jsonObjectStation.getString("stationShortCode"));
-                        station.put("stationName", jsonObjectStation.getString("stationName"));
-                        station.put("stationUICCode", jsonObjectStation.getString("stationUICCode"));
-                        stationList.add((LinkedHashMap<String, String>) station);
+                        stationList.add(new Station("Helsinki","HKI", "1"));
+                        //station.put("stationShortCode", jsonObjectStation.getString("stationShortCode"));
+                        //station.put("stationName", jsonObjectStation.getString("stationName"));
+                        //station.put("stationUICCode", jsonObjectStation.getString("stationUICCode"));
+                        //stationList.add((LinkedHashMap<String, String>) station);
                     }
                 }
             } catch (JSONException e) {
@@ -87,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
             if (pDialog.isShowing())
                 pDialog.dismiss();
 
-            final ListAdapter adapter = new SimpleAdapter(
+            final ListAdapter adapter = new ArrayAdapter<Station>(
                     MainActivity.this, stationList,
                     R.layout.list_item, new String[]{"stationName", "stationShortCode",
                     "stationUICCode"}, new int[]{R.id.stationName,
