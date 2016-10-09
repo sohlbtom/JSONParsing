@@ -3,8 +3,8 @@ package com.example.android.jsonparsing;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -14,20 +14,26 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Calendar;
 import java.util.LinkedHashMap;
+import java.util.TimeZone;
 
 public class TrainPerStation extends AppCompatActivity {
 
     private String TAG = MainActivity.class.getSimpleName();
     private ProgressDialog pDialog;
     private ListView listView2;
-    private Integer testi=0;
-    //String stationShortCode = intent.getStringExtra("stationShortCode");
-    //String shortCode = "RI";
-    String shortCode;
-    String url;
+    private Integer testi = 0;
+    String shortCode, url, parsedTime, trainTime;
+    //TimeZone tz = TimeZone.getDefault();
+    Calendar cal = Calendar.getInstance();
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
+
+    int mins, hours;
 
 
     ArrayList<LinkedHashMap<String, String>> trainsPerStation;
@@ -41,12 +47,13 @@ public class TrainPerStation extends AppCompatActivity {
         new dataFetcher().execute();
         Intent intent = getIntent();
         shortCode = intent.getStringExtra("stationShortCode");
-        url = "http://rata.digitraffic.fi/api/v1/live-trains?station=" + shortCode + "&minutes_before_departure=0&minutes_after_departure=0&minutes_before_arrival=150&minutes_after_arrival=150";
+        sdf.setCalendar(cal);
+
+        url = "http://rata.digitraffic.fi/api/v1/live-trains?station=" + shortCode + "&minutes_before_departure=0&minutes_after_departure=0&minutes_before_arrival=60&minutes_after_arrival=60";
     }
 
 
-
-    class dataFetcher extends AsyncTask<Void,Void,Void> {
+    class dataFetcher extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -69,31 +76,47 @@ public class TrainPerStation extends AppCompatActivity {
             // Json Parsing Code Start
             try {
                 JSONArray jsonArray = new JSONArray(jsonStr);
-                for (int i = 0; i <jsonArray.length(); i++)
-                {
+                for (int i = 0; i < jsonArray.length(); i++) {
                     LinkedHashMap<String, String> station = new LinkedHashMap<>();
                     JSONObject jsonObjectStation = jsonArray.getJSONObject(i);
 
-                    station.put("trainNumber", jsonObjectStation.getString("trainNumber"));
 
                     JSONArray timeTableRows = jsonObjectStation.getJSONArray("timeTableRows");
 
-                    for(int j = 0; j < timeTableRows.length();j++){
+                    for (int j = 0; j < timeTableRows.length(); j++) {
                         JSONObject jsonTimeTableRow = timeTableRows.getJSONObject(j);
                         String stationShortCode = jsonTimeTableRow.getString("stationShortCode");
                         String type = jsonTimeTableRow.getString("type");
-                        int differenceInMinutes = Integer.parseInt(jsonTimeTableRow.getString("differenceInMinutes"));
-                        if(stationShortCode.equals(shortCode) && type.equals("ARRIVAL")){
-                            station.put("stationShortCode", stationShortCode);
-                            station.put("scheduledTime", jsonTimeTableRow.getString("scheduledTime"));
-                            station.put("differenceInMinutes", jsonTimeTableRow.getString("differenceInMinutes"));
+
+                        if (stationShortCode.equals(shortCode) && type.equals("ARRIVAL")) {
+                            //haetaan junan aikataulu ja siivotaan siitä pelkkä HH:mm
+                            trainTime = jsonTimeTableRow.getString("actualTime");
+
+                            try {
+                                //luetaan jsonista GMT aikana sisään.
+                                cal.setTimeZone(TimeZone.getTimeZone(""));
+                                cal.setTime(sdf.parse(trainTime));
+                                //muutetaan aikavyöhyke
+                                cal.setTimeZone(TimeZone.getTimeZone("Europe/Helsinki"));
+
+                                hours = cal.get(Calendar.HOUR_OF_DAY);
+                                mins =cal.get(Calendar.MINUTE);
+                                //string format lisää nollan jos minuutteja alle 10 16:7 -> 16:07
+                                parsedTime = (hours +":"+String.format("%02d", mins));
+
+                                station.put("trainNumber", jsonObjectStation.getString("trainNumber"));
+                                //station.put("stationShortCode", stationShortCode);
+                                station.put("actualTime", parsedTime);
+                                station.put("differenceInMinutes", jsonTimeTableRow.getString("differenceInMinutes"));
+
+                                trainsPerStation.add((LinkedHashMap<String, String>) station);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
                         }
 
 
                     }
-                        trainsPerStation.add((LinkedHashMap<String, String>) station);
-
-
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -111,9 +134,9 @@ public class TrainPerStation extends AppCompatActivity {
 
             ListAdapter adapter = new SimpleAdapter(
                     TrainPerStation.this, trainsPerStation,
-                    R.layout.list_train, new String[]{"trainNumber", "stationShortCode",
-                    "scheduledTime"}, new int[]{R.id.trainNumber,
-                    R.id.stationShortCode, R.id.scheduledTime});
+                    R.layout.list_train, new String[]{"trainNumber", "differenceInMinutes",
+                    "actualTime"}, new int[]{R.id.trainNumber,
+                    R.id.differenceInMinutes, R.id.actualTime});
 
             listView2.setAdapter(adapter);
         }
