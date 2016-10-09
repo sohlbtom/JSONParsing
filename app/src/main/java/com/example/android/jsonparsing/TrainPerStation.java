@@ -49,7 +49,7 @@ public class TrainPerStation extends AppCompatActivity {
         shortCode = intent.getStringExtra("stationShortCode");
         sdf.setCalendar(cal);
 
-        url = "http://rata.digitraffic.fi/api/v1/live-trains?station=" + shortCode + "&minutes_before_departure=0&minutes_after_departure=0&minutes_before_arrival=60&minutes_after_arrival=60";
+        url = "http://rata.digitraffic.fi/api/v1/live-trains?station=" + shortCode + "&minutes_before_departure=0&minutes_after_departure=0&minutes_before_arrival=30&minutes_after_arrival=30";
     }
 
 
@@ -90,7 +90,7 @@ public class TrainPerStation extends AppCompatActivity {
 
                         if (stationShortCode.equals(shortCode) && type.equals("ARRIVAL")) {
                             //haetaan junan aikataulu ja siivotaan siitä pelkkä HH:mm
-                            trainTime = jsonTimeTableRow.getString("actualTime");
+                            trainTime = jsonTimeTableRow.getString("scheduledTime");
 
                             try {
                                 //luetaan jsonista GMT aikana sisään.
@@ -106,7 +106,7 @@ public class TrainPerStation extends AppCompatActivity {
 
                                 station.put("trainNumber", jsonObjectStation.getString("trainNumber"));
                                 //station.put("stationShortCode", stationShortCode);
-                                station.put("actualTime", parsedTime);
+                                station.put("scheduledTime", parsedTime);
                                 station.put("differenceInMinutes", jsonTimeTableRow.getString("differenceInMinutes"));
 
                                 trainsPerStation.add((LinkedHashMap<String, String>) station);
@@ -135,8 +135,8 @@ public class TrainPerStation extends AppCompatActivity {
             ListAdapter adapter = new SimpleAdapter(
                     TrainPerStation.this, trainsPerStation,
                     R.layout.list_train, new String[]{"trainNumber", "differenceInMinutes",
-                    "actualTime"}, new int[]{R.id.trainNumber,
-                    R.id.differenceInMinutes, R.id.actualTime});
+                    "scheduledTime"}, new int[]{R.id.trainNumber,
+                    R.id.differenceInMinutes, R.id.scheduledTime});
 
             listView2.setAdapter(adapter);
         }
