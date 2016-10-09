@@ -49,7 +49,7 @@ public class TrainPerStation extends AppCompatActivity {
         shortCode = intent.getStringExtra("stationShortCode");
         sdf.setCalendar(cal);
 
-        url = "http://rata.digitraffic.fi/api/v1/live-trains?station=" + shortCode + "&minutes_before_departure=0&minutes_after_departure=0&minutes_before_arrival=30&minutes_after_arrival=30";
+        url = "http://rata.digitraffic.fi/api/v1/live-trains?station=" + shortCode + "&minutes_before_departure=0&minutes_after_departure=0&minutes_before_arrival=30&minutes_after_arrival=0";
     }
 
 
@@ -107,8 +107,12 @@ public class TrainPerStation extends AppCompatActivity {
                                 station.put("trainNumber", jsonObjectStation.getString("trainNumber"));
                                 //station.put("stationShortCode", stationShortCode);
                                 station.put("scheduledTime", parsedTime);
-                                station.put("differenceInMinutes", jsonTimeTableRow.getString("differenceInMinutes"));
-
+                                //tarkistetaan tuleeko JSONissa mukana diffrerenceInMinutes"-tietoa
+                                if (jsonTimeTableRow.has("differenceInMinutes")){
+                                    station.put("differenceInMinutes", jsonTimeTableRow.getString("differenceInMinutes"));
+                                } else {
+                                    station.put("differenceInMinutes", "N/A");
+                                }
                                 trainsPerStation.add((LinkedHashMap<String, String>) station);
                             } catch (ParseException e) {
                                 e.printStackTrace();
