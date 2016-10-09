@@ -28,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     EditText searchBox;
     public String muutettu ="",jsonStr ;
 
+    //testi
+
     protected static String url = "http://rata.digitraffic.fi/api/v1/metadata/stations";
 
     ArrayList<Station> stationList = new ArrayList<>();
@@ -78,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                     //Laitettu ehto, jotta tulostaa listalle vain kaupallisen matkustajaliikenteen asemat.
-                    if(passengerTraffic == "true" && stationName.startsWith(muutettu) ) {
+                    if(passengerTraffic == "true" && stationName.toLowerCase().startsWith(muutettu) ) {
                         String stationShortCode = jsonObjectStation.getString("stationShortCode");
 
                         String stationUICCode = jsonObjectStation.getString("stationUICCode");
@@ -130,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    muutettu = s.toString();
+                    muutettu = s.toString().toLowerCase();
                     Log.e("onTextChanged: ", muutettu);
                     stationList.clear();
                     parsiJson();
