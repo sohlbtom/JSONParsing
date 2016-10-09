@@ -9,27 +9,28 @@
         android:id="@+id/trainNumber"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="3"
+        android:layout_weight="2"
         android:paddingBottom="2dip"
         android:paddingTop="6dip"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="16sp"
         android:textStyle="bold" />
 
+
+
     <TextView
-        android:id="@+id/stationShortCode"
+        android:id="@+id/actualTime"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:textColor="#5d5d5d"
+        android:textStyle="bold" />
+    <TextView
+        android:id="@+id/differenceInMinutes"
         android:layout_width="0dp"
         android:layout_weight="1"
 
         android:layout_height="wrap_content"
         android:paddingBottom="2dip"
         android:textColor="@color/colorAccent" />
-
-    <TextView
-        android:id="@+id/scheduledTime"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:textColor="#5d5d5d"
-        android:textStyle="bold" />
 </LinearLayout>
