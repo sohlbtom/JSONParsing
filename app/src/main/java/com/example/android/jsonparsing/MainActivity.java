@@ -5,26 +5,26 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.AsyncTask;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 public class MainActivity extends AppCompatActivity {
 
     private String TAG = MainActivity.class.getSimpleName();
     private ProgressDialog pDialog;
     private ListView listView;
-    private Integer testi=0;
+    EditText searchBox;
 
     protected static String url = "http://rata.digitraffic.fi/api/v1/metadata/stations";
 
@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                 pDialog.dismiss();
 
 
-        ArrayAdapter adapter = new ArrayAdapter<Station>(MainActivity.this, R.layout.list_item, R.id.stationName, stationList);
+        final ArrayAdapter adapter = new ArrayAdapter<Station>(MainActivity.this, R.layout.list_station, R.id.stationName, stationList);
 
 
             listView.setAdapter(adapter);
@@ -101,6 +101,27 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
             });
+
+            searchBox=(EditText)findViewById(R.id.search);
+            searchBox.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    adapter.getFilter().filter(s);
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    adapter.getFilter().filter(s);
+
+                }
+            });
+
         }
     }
 }
