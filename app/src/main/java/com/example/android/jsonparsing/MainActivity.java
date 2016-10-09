@@ -2,9 +2,9 @@ package com.example.android.jsonparsing;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -17,6 +17,7 @@ import android.widget.ListView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private ProgressDialog pDialog;
     private ListView listView;
     EditText searchBox;
+    public String muutettu ="",jsonStr ;
 
     protected static String url = "http://rata.digitraffic.fi/api/v1/metadata/stations";
 
@@ -53,32 +55,46 @@ public class MainActivity extends AppCompatActivity {
         protected Void doInBackground(Void... params) {
             // Http Request Code start
             HttpHandler sh = new HttpHandler();
-            String jsonStr = sh.makeServiceCall(url);
+            jsonStr = sh.makeServiceCall(url);
             Log.d("Response from url: ", jsonStr);
+            parsiJson();
             // Http Request Code end
             // Json Parsing Code Start
+
+
+            return null;
+        }
+
+        protected Void parsiJson(){
             try {
                 JSONArray jsonArray = new JSONArray(jsonStr);
+
                 for (int i = 0; i <jsonArray.length(); i++)
                 {
 
                     JSONObject jsonObjectStation = jsonArray.getJSONObject(i);
                     String passengerTraffic = jsonObjectStation.getString("passengerTraffic");
+                    String stationName = jsonObjectStation.getString("stationName");
+
 
                     //Laitettu ehto, jotta tulostaa listalle vain kaupallisen matkustajaliikenteen asemat.
-                    if(passengerTraffic == "true") {
+                    if(passengerTraffic == "true" && stationName.startsWith(muutettu) ) {
                         String stationShortCode = jsonObjectStation.getString("stationShortCode");
-                        String stationName = jsonObjectStation.getString("stationName");
+
                         String stationUICCode = jsonObjectStation.getString("stationUICCode");
                         stationList.add(new Station(stationName, stationShortCode, stationUICCode));
+
                     }
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
 //Json Parsing code end
             return null;
         }
+
+
 
 
         @Override
@@ -87,9 +103,10 @@ public class MainActivity extends AppCompatActivity {
             if (pDialog.isShowing())
                 pDialog.dismiss();
 
+            parsiJson();
+
 
         final ArrayAdapter adapter = new ArrayAdapter<Station>(MainActivity.this, R.layout.list_station, R.id.stationName, stationList);
-
 
             listView.setAdapter(adapter);
             listView.setClickable(true);
@@ -106,22 +123,45 @@ public class MainActivity extends AppCompatActivity {
             searchBox.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    adapter.getFilter().filter(s);
+                    //adapter.getFilter().filter(s);
+                    Log.e("beforeText: ", muutettu);
+
                 }
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    muutettu = s.toString();
+                    Log.e("onTextChanged: ", muutettu);
+                    stationList.clear();
+                    parsiJson();
+                    adapter.notifyDataSetChanged();
+                    return;
+
+
 
 
                 }
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    adapter.getFilter().filter(s);
+                    Log.e("afterTextChanged: ", muutettu);
+                    adapter.notifyDataSetChanged();
+                    adapter.notifyDataSetInvalidated();
+                    //adapter.getFilter().filter(s);
+
+
 
                 }
             });
 
+
+
+
+        };
+
+
+
+
         }
     }
-}
+
