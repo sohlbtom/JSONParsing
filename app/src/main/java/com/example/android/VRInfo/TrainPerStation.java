@@ -101,15 +101,15 @@ public class TrainPerStation extends AppCompatActivity {
                                 cal.setTimeZone(TimeZone.getTimeZone("Europe/Helsinki"));
 
                                 hours = cal.get(Calendar.HOUR_OF_DAY);
-                                mins =cal.get(Calendar.MINUTE);
+                                mins = cal.get(Calendar.MINUTE);
                                 //string format lisää nollan jos minuutteja alle 10 16:7 -> 16:07
-                                parsedTime = (hours +":"+String.format("%02d", mins));
+                                parsedTime = (hours + ":" + String.format("%02d", mins));
 
                                 station.put("trainNumber", jsonObjectStation.getString("trainNumber"));
                                 //station.put("stationShortCode", stationShortCode);
                                 station.put("scheduledTime", parsedTime);
                                 //tarkistetaan tuleeko JSONissa mukana diffrerenceInMinutes"-tietoa
-                                if (jsonTimeTableRow.has("differenceInMinutes")){
+                                if (jsonTimeTableRow.has("differenceInMinutes")) {
                                     station.put("differenceInMinutes", jsonTimeTableRow.getString("differenceInMinutes"));
                                 } else {
                                     station.put("differenceInMinutes", "0");
@@ -124,10 +124,10 @@ public class TrainPerStation extends AppCompatActivity {
                     }
 
                 }   //if (trainsPerStation.size()<1){
-                    //station.put("trainNumber", "N/A");
-                    //station.put("scheduledTime", "--");
-                    //station.put("differenceInMinutes", "--");
-                    //trainsPerStation.add((LinkedHashMap<String, String>) station);
+                //station.put("trainNumber", "N/A");
+                //station.put("scheduledTime", "--");
+                //station.put("differenceInMinutes", "--");
+                //trainsPerStation.add((LinkedHashMap<String, String>) station);
                 //}
             } catch (JSONException e) {
                 e.printStackTrace();

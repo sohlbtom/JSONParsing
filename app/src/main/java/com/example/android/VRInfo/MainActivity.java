@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private ProgressDialog pDialog;
     private ListView listView;
     EditText searchBox;
-    public String searchTerm ="",jsonStr ;
+    public String searchTerm = "", jsonStr;
 
     //testi
 
@@ -41,7 +41,8 @@ public class MainActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.list);
         new dataFetcher().execute();
     }
-        class dataFetcher extends AsyncTask<Void,Void,Void> {
+
+    class dataFetcher extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -67,12 +68,11 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
 
-        protected Void parsiJson(){
+        protected Void parsiJson() {
             try {
                 JSONArray jsonArray = new JSONArray(jsonStr);
 
-                for (int i = 0; i <jsonArray.length(); i++)
-                {
+                for (int i = 0; i < jsonArray.length(); i++) {
 
                     JSONObject jsonObjectStation = jsonArray.getJSONObject(i);
                     String passengerTraffic = jsonObjectStation.getString("passengerTraffic");
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                     //Laitettu ehto, jotta tulostaa listalle vain kaupallisen matkustajaliikenteen asemat.
-                    if(passengerTraffic == "true" && stationName.toLowerCase().startsWith(searchTerm) ) {
+                    if (passengerTraffic == "true" && stationName.toLowerCase().startsWith(searchTerm)) {
                         String stationShortCode = jsonObjectStation.getString("stationShortCode");
 
                         String stationUICCode = jsonObjectStation.getString("stationUICCode");
@@ -97,8 +97,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
-
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
@@ -108,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
             parsiJson();
 
 
-        final ArrayAdapter adapter = new ArrayAdapter<Station>(MainActivity.this, R.layout.list_station, R.id.stationName, stationList);
+            final ArrayAdapter adapter = new ArrayAdapter<Station>(MainActivity.this, R.layout.list_station, R.id.stationName, stationList);
 
             listView.setAdapter(adapter);
             listView.setClickable(true);
@@ -121,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-            searchBox=(EditText)findViewById(R.id.search);
+            searchBox = (EditText) findViewById(R.id.search);
             searchBox.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -140,8 +138,6 @@ public class MainActivity extends AppCompatActivity {
                     return;
 
 
-
-
                 }
 
                 @Override
@@ -152,18 +148,15 @@ public class MainActivity extends AppCompatActivity {
                     //adapter.getFilter().filter(s);
 
 
-
                 }
             });
 
 
-
-
-        };
-
-
-
-
         }
+
+        ;
+
+
     }
+}
 

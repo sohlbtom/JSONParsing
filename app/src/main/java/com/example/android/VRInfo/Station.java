@@ -14,13 +14,13 @@ public class Station {
     }
 
 
-    public Station(String stationName,String stationShortCode, String stationUICCode){
+    public Station(String stationName, String stationShortCode, String stationUICCode) {
         this.stationName = stationName;
         this.stationShortCode = stationShortCode;
         this.stationUICCode = stationUICCode;
     }
 
-    public Station(int id, String stationName, String stationShortCode, String stationUICCode){
+    public Station(int id, String stationName, String stationShortCode, String stationUICCode) {
         this.id = id;
         this.stationName = stationName;
         this.stationShortCode = stationShortCode;
@@ -60,7 +60,7 @@ public class Station {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return this.stationName;
     }
 }
