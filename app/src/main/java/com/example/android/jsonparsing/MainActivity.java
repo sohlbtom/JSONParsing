@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private ProgressDialog pDialog;
     private ListView listView;
     EditText searchBox;
-    public String muutettu ="",jsonStr ;
+    public String searchTerm ="",jsonStr ;
 
     //testi
 
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                     //Laitettu ehto, jotta tulostaa listalle vain kaupallisen matkustajaliikenteen asemat.
-                    if(passengerTraffic == "true" && stationName.toLowerCase().startsWith(muutettu) ) {
+                    if(passengerTraffic == "true" && stationName.toLowerCase().startsWith(searchTerm) ) {
                         String stationShortCode = jsonObjectStation.getString("stationShortCode");
 
                         String stationUICCode = jsonObjectStation.getString("stationUICCode");
@@ -126,14 +126,14 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                     //adapter.getFilter().filter(s);
-                    Log.e("beforeText: ", muutettu);
+                    Log.e("beforeText: ", searchTerm);
 
                 }
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    muutettu = s.toString().toLowerCase();
-                    Log.e("onTextChanged: ", muutettu);
+                    searchTerm = s.toString().toLowerCase();
+                    Log.e("onTextChanged: ", searchTerm);
                     stationList.clear();
                     parsiJson();
                     adapter.notifyDataSetChanged();
@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    Log.e("afterTextChanged: ", muutettu);
+                    Log.e("afterTextChanged: ", searchTerm);
                     adapter.notifyDataSetChanged();
                     adapter.notifyDataSetInvalidated();
                     //adapter.getFilter().filter(s);

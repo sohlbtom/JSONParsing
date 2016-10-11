@@ -2,6 +2,7 @@ package com.example.android.jsonparsing;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +22,8 @@ import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.TimeZone;
 
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.LV;
+
 public class TrainPerStation extends AppCompatActivity {
 
     private String TAG = MainActivity.class.getSimpleName();
@@ -37,6 +40,7 @@ public class TrainPerStation extends AppCompatActivity {
 
 
     ArrayList<LinkedHashMap<String, String>> trainsPerStation;
+    LinkedHashMap<String, String> station;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +81,7 @@ public class TrainPerStation extends AppCompatActivity {
             try {
                 JSONArray jsonArray = new JSONArray(jsonStr);
                 for (int i = 0; i < jsonArray.length(); i++) {
-                    LinkedHashMap<String, String> station = new LinkedHashMap<>();
+                    station = new LinkedHashMap<>();
                     JSONObject jsonObjectStation = jsonArray.getJSONObject(i);
 
 
@@ -111,7 +115,7 @@ public class TrainPerStation extends AppCompatActivity {
                                 if (jsonTimeTableRow.has("differenceInMinutes")){
                                     station.put("differenceInMinutes", jsonTimeTableRow.getString("differenceInMinutes"));
                                 } else {
-                                    station.put("differenceInMinutes", "N/A");
+                                    station.put("differenceInMinutes", "0");
                                 }
                                 trainsPerStation.add((LinkedHashMap<String, String>) station);
                             } catch (ParseException e) {
@@ -121,7 +125,13 @@ public class TrainPerStation extends AppCompatActivity {
 
 
                     }
-                }
+
+                }   //if (trainsPerStation.size()<1){
+                    //station.put("trainNumber", "N/A");
+                    //station.put("scheduledTime", "--");
+                    //station.put("differenceInMinutes", "--");
+                    //trainsPerStation.add((LinkedHashMap<String, String>) station);
+                //}
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -135,6 +145,7 @@ public class TrainPerStation extends AppCompatActivity {
             super.onPostExecute(aVoid);
             if (pDialog.isShowing())
                 pDialog.dismiss();
+
 
             ListAdapter adapter = new SimpleAdapter(
                     TrainPerStation.this, trainsPerStation,
