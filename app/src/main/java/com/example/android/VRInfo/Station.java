@@ -1,4 +1,4 @@
-package com.example.android.jsonparsing;
+package com.example.android.VRInfo;
 
 /**
  * Created by tommi on 24.9.2016.

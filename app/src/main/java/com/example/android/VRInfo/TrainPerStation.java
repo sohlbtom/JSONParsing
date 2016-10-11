@@ -1,8 +1,7 @@
-package com.example.android.jsonparsing;
+package com.example.android.VRInfo;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -21,8 +20,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.TimeZone;
-
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.LV;
 
 public class TrainPerStation extends AppCompatActivity {
 

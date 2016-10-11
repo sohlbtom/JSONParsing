@@ -1,4 +1,4 @@
-package com.example.android.jsonparsing;
+package com.example.android.VRInfo;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
