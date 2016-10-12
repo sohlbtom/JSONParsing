@@ -28,8 +28,6 @@ public class MainActivity extends AppCompatActivity {
     EditText searchBox;
     public String searchTerm = "", jsonStr;
 
-    //testi
-
     protected static String url = "http://rata.digitraffic.fi/api/v1/metadata/stations";
 
     ArrayList<Station> stationList = new ArrayList<>();
@@ -60,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
             HttpHandler sh = new HttpHandler();
             jsonStr = sh.makeServiceCall(url);
             Log.d("Response from url: ", jsonStr);
-            parsiJson();
             // Http Request Code end
             // Json Parsing Code Start
 
@@ -68,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
 
-        protected Void parsiJson() {
+        Void parsiJson() {
             try {
                 JSONArray jsonArray = new JSONArray(jsonStr);
 
@@ -80,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                     //Laitettu ehto, jotta tulostaa listalle vain kaupallisen matkustajaliikenteen asemat.
-                    if (passengerTraffic == "true" && stationName.toLowerCase().startsWith(searchTerm)) {
+                    if (passengerTraffic.equals("true")  && stationName.toLowerCase().startsWith(searchTerm)) {
                         String stationShortCode = jsonObjectStation.getString("stationShortCode");
 
                         String stationUICCode = jsonObjectStation.getString("stationUICCode");
@@ -106,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
             parsiJson();
 
 
-            final ArrayAdapter adapter = new ArrayAdapter<Station>(MainActivity.this, R.layout.list_station, R.id.stationName, stationList);
+            final ArrayAdapter adapter = new ArrayAdapter<>(MainActivity.this, R.layout.list_station, R.id.stationName, stationList);
 
             listView.setAdapter(adapter);
             listView.setClickable(true);
@@ -135,7 +132,6 @@ public class MainActivity extends AppCompatActivity {
                     stationList.clear();
                     parsiJson();
                     adapter.notifyDataSetChanged();
-                    return;
 
 
                 }
@@ -154,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        ;
+
 
 
     }

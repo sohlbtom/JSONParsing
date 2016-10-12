@@ -114,7 +114,7 @@ public class TrainPerStation extends AppCompatActivity {
                                 } else {
                                     station.put("differenceInMinutes", "0");
                                 }
-                                trainsPerStation.add((LinkedHashMap<String, String>) station);
+                                trainsPerStation.add(station);
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
@@ -123,12 +123,13 @@ public class TrainPerStation extends AppCompatActivity {
 
                     }
 
-                }   //if (trainsPerStation.size()<1){
-                //station.put("trainNumber", "N/A");
-                //station.put("scheduledTime", "--");
-                //station.put("differenceInMinutes", "--");
-                //trainsPerStation.add((LinkedHashMap<String, String>) station);
-                //}
+                }
+                /*if (trainsPerStation.size() < 1) {
+                    station.put("trainNumber", "N/A");
+                    station.put("scheduledTime", "--");
+                    station.put("differenceInMinutes", "--");
+                    trainsPerStation.add(station);
+                }*/
             } catch (JSONException e) {
                 e.printStackTrace();
             }

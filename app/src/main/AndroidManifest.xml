@@ -9,8 +9,9 @@
 
     <application
         android:allowBackup="true"
+        android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="VR-Info"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name="com.example.android.VRInfo.MainActivity">
@@ -20,7 +21,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.android.VRInfo.TrainPerStation"></activity>
+        <activity android:name="com.example.android.VRInfo.TrainPerStation"/>
     </application>
 
 </manifest>
