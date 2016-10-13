@@ -124,12 +124,7 @@ public class TrainPerStation extends AppCompatActivity {
                     }
 
                 }
-                /*if (trainsPerStation.size() < 1) {
-                    station.put("trainNumber", "N/A");
-                    station.put("scheduledTime", "--");
-                    station.put("differenceInMinutes", "--");
-                    trainsPerStation.add(station);
-                }*/
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -143,6 +138,16 @@ public class TrainPerStation extends AppCompatActivity {
             super.onPostExecute(aVoid);
             if (pDialog.isShowing())
                 pDialog.dismiss();
+
+            String.valueOf(trainsPerStation.size());
+            if (trainsPerStation.size() ==0){
+                trainsPerStation = new ArrayList<>();
+                station = new LinkedHashMap<>();
+                station.put("trainNumber", "N/A");
+                station.put("scheduledTime", "--");
+                station.put("differenceInMinutes", "--");
+                trainsPerStation.add((LinkedHashMap<String, String>) station);
+            }
 
 
             ListAdapter adapter = new SimpleAdapter(
